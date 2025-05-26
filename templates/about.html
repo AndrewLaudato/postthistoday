@@ -1,0 +1,88 @@
+{% extends 'base.html' %}
+
+{% block title %}About - {{ site_name }}{% endblock %}
+{% block meta_description %}Learn about {{ site_name }} and how we're revolutionizing LinkedIn content creation with AI{% endblock %}
+
+{% block content %}
+    <!-- Hero Section -->
+    <section className="bg-gradient-to-br from-purple-50 to-white py-16">
+        <div className="max-w-4xl mx-auto px-6">
+            <h1 className="text-4xl font-bold text-gray-900 mb-6">About Post This Today</h1>
+            <p className="text-xl text-gray-600">
+                We're on a mission to help professionals share their expertise on LinkedIn without spending hours crafting the perfect post.
+            </p>
+        </div>
+    </section>
+
+    <!-- Story Section -->
+    <section className="py-16 bg-white">
+        <div className="max-w-4xl mx-auto px-6">
+            <h2 className="text-3xl font-bold text-gray-900 mb-6">Our Story</h2>
+            <div className="prose prose-lg text-gray-600 space-y-4">
+                <p>
+                    Post This Today was born from a simple observation: talented professionals have incredible insights to share,
+                    but creating consistent, engaging LinkedIn content takes time they don't have.
+                </p>
+                <p>
+                    We built Post This Today to bridge that gap. By combining AI technology with your unique writing style,
+                    we help you transform ideas into polished LinkedIn posts in minutes, not hours.
+                </p>
+                <p>
+                    Our platform learns from your writing samples to ensure every post sounds authentically like you,
+                    while incorporating trending topics and LinkedIn best practices for maximum engagement.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Mission Section -->
+    <section className="py-16 bg-stone-50">
+        <div className="max-w-4xl mx-auto px-6">
+            <h2 className="text-3xl font-bold text-gray-900 mb-6">Our Mission</h2>
+            <div className="bg-white rounded-lg p-8 shadow-sm border border-stone-200">
+                <p className="text-lg text-gray-700 mb-6">
+                    To empower every professional to share their knowledge and build their personal brand on LinkedIn,
+                    regardless of their writing experience or available time.
+                </p>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div className="text-center">
+                        <div className="bg-purple-100 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-3">
+                            <i data-lucide="clock" className="h-8 w-8 text-purple-800"></i>
+                        </div>
+                        <h3 className="font-semibold text-gray-900 mb-2">Save Time</h3>
+                        <p className="text-sm text-gray-600">Create posts in minutes, not hours</p>
+                    </div>
+                    <div className="text-center">
+                        <div className="bg-purple-100 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-3">
+                            <i data-lucide="fingerprint" className="h-8 w-8 text-purple-800"></i>
+                        </div>
+                        <h3 className="font-semibold text-gray-900 mb-2">Stay Authentic</h3>
+                        <p className="text-sm text-gray-600">AI that matches your unique voice</p>
+                    </div>
+                    <div className="text-center">
+                        <div className="bg-purple-100 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-3">
+                            <i data-lucide="trending-up" className="h-8 w-8 text-purple-800"></i>
+                        </div>
+                        <h3 className="font-semibold text-gray-900 mb-2">Drive Engagement</h3>
+                        <p className="text-sm text-gray-600">Content optimized for LinkedIn success</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Team Section (Placeholder) -->
+    <section className="py-16 bg-white">
+        <div className="max-w-4xl mx-auto px-6">
+            <h2 className="text-3xl font-bold text-gray-900 mb-6">Built by Professionals, for Professionals</h2>
+            <p className="text-lg text-gray-600 mb-8">
+                Our team combines expertise in AI, content marketing, and software development to create tools that actually work for busy professionals.
+            </p>
+            <div className="text-center">
+                <a href="{% url 'account_signup' %}" className="inline-block bg-purple-800 text-white px-8 py-3 rounded-lg hover:bg-purple-900 transition-colors font-semibold">
+                    Start Creating Better Content
+                </a>
+            </div>
+        </div>
+    </section>
+{% endblock %}

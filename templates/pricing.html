@@ -1,0 +1,110 @@
+{% extends 'base.html' %}
+
+{% block title %}Pricing - {{ site_name }}{% endblock %}
+{% block meta_description %}Simple, transparent pricing for Post This Today. Start free and upgrade as you grow.{% endblock %}
+
+{% block content %}
+    <!-- Hero Section -->
+    <section class="bg-gradient-to-br from-purple-50 to-white py-16">
+        <div class="max-w-6xl mx-auto px-6 text-center">
+            <h1 class="text-4xl font-bold text-gray-900 mb-6">Simple, Transparent Pricing</h1>
+            <p class="text-xl text-gray-600 max-w-2xl mx-auto">
+                Start creating LinkedIn content for free. Upgrade when you're ready for more advanced features.
+            </p>
+        </div>
+    </section>
+
+    <!-- Pricing Cards -->
+    <section class="py-16 bg-white">
+        <div class="max-w-6xl mx-auto px-6">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                {% for tier in pricing_tiers %}
+                    <div class="relative {% if tier.highlighted %}ring-2 ring-purple-500 transform scale-105{% endif %} bg-white rounded-lg shadow-lg border border-stone-200 p-8">
+                        {% if tier.highlighted %}
+                            <div class="absolute -top-4 left-1/2 transform -translate-x-1/2">
+                                <span class="bg-purple-800 text-white px-4 py-1 rounded-full text-sm font-semibold">
+                                    Most Popular
+                                </span>
+                            </div>
+                        {% endif %}
+
+                        <h3 class="text-2xl font-bold text-gray-900 mb-2">{{ tier.name }}</h3>
+                        <div class="mb-6">
+                            <span class="text-4xl font-bold text-gray-900">{{ tier.price }}</span>
+                            <span class="text-gray-600">{{ tier.period }}</span>
+                        </div>
+
+                        <ul class="space-y-3 mb-8">
+                            {% for feature in tier.features %}
+                                <li class="flex items-start">
+                                    <i data-lucide="check" class="h-5 w-5 text-purple-600 mr-2 flex-shrink-0 mt-0.5"></i>
+                                    <span class="text-gray-600">{{ feature }}</span>
+                                </li>
+                            {% endfor %}
+                        </ul>
+
+                        <a href="{% url 'account_signup' %}" class="block w-full text-center px-6 py-3 rounded-lg font-semibold transition-colors {% if tier.highlighted %}bg-purple-800 text-white hover:bg-purple-900{% else %}bg-purple-100 text-purple-800 hover:bg-purple-200{% endif %}">
+                            {{ tier.cta }}
+                        </a>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ Section -->
+    <section class="py-16 bg-stone-50">
+        <div class="max-w-4xl mx-auto px-6">
+            <h2 class="text-3xl font-bold text-gray-900 mb-8 text-center">Pricing FAQs</h2>
+
+            <div class="space-y-6">
+                <div class="bg-white rounded-lg p-6 shadow-sm border border-stone-200">
+                    <h3 class="text-lg font-semibold text-gray-900 mb-3">Can I change plans anytime?</h3>
+                    <p class="text-gray-600">
+                        Yes! You can upgrade or downgrade your plan at any time. Changes take effect immediately,
+                        and we'll prorate any payments.
+                    </p>
+                </div>
+
+                <div class="bg-white rounded-lg p-6 shadow-sm border border-stone-200">
+                    <h3 class="text-lg font-semibold text-gray-900 mb-3">What payment methods do you accept?</h3>
+                    <p class="text-gray-600">
+                        We accept all major credit cards (Visa, Mastercard, American Express) and debit cards.
+                        Enterprise customers can also pay by invoice.
+                    </p>
+                </div>
+
+                <div class="bg-white rounded-lg p-6 shadow-sm border border-stone-200">
+                    <h3 class="text-lg font-semibold text-gray-900 mb-3">Is there a free trial for paid plans?</h3>
+                    <p class="text-gray-600">
+                        Our Free plan lets you experience Post This Today without any commitment.
+                        When you're ready for more features, upgrade to Pro with confidence.
+                    </p>
+                </div>
+
+                <div class="bg-white rounded-lg p-6 shadow-sm border border-stone-200">
+                    <h3 class="text-lg font-semibold text-gray-900 mb-3">What happens if I exceed my post limit?</h3>
+                    <p class="text-gray-600">
+                        On the Free plan, you'll need to wait until the next month or upgrade to continue posting.
+                        Pro and Enterprise plans have no limits on post creation.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="py-16 bg-white">
+        <div class="max-w-4xl mx-auto px-6 text-center">
+            <h2 class="text-3xl font-bold text-gray-900 mb-6">
+                Ready to Start Creating Better LinkedIn Content?
+            </h2>
+            <p class="text-xl text-gray-600 mb-8">
+                Join thousands of professionals already using Post This Today
+            </p>
+            <a href="{% url 'account_signup' %}" class="inline-block bg-purple-800 text-white px-8 py-4 rounded-lg hover:bg-purple-900 transition-colors font-semibold text-lg">
+                Get Started Free
+            </a>
+        </div>
+    </section>
+{% endblock %}

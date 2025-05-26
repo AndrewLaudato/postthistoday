@@ -44,21 +44,87 @@ TRENDING_TOPICS_DATA = [
 # Workflow configuration
 TOTAL_STEPS = 5
 
+##not logged in pages
+
+# Add these imports at the top of your views.py file:
+from django.shortcuts import render, redirect
+from . import parms  # Import the configuration parameters
+
+
+# Add these view functions to your existing views.py:
+
+def landing_page(request):
+    """
+    Public landing page for Post This Today
+    """
+    if request.user.is_authenticated:
+        return redirect('app_home')
+
+    context = {
+        'site_name': parms.SITE_NAME,
+        'site_tagline': parms.SITE_TAGLINE,
+        'site_description': parms.SITE_DESCRIPTION,
+        'features': parms.FEATURES,
+        'workflow_steps': parms.WORKFLOW_STEPS,
+        'faq_items': parms.FAQ_ITEMS,
+        'cta_primary': parms.CTA_PRIMARY,
+        'cta_secondary': parms.CTA_SECONDARY,
+    }
+    return render(request, 'landing_page.html', context)
+
+
+def about_page(request):
+    """
+    About page for Post This Today
+    """
+    context = {
+        'site_name': parms.SITE_NAME,
+        'site_tagline': parms.SITE_TAGLINE,
+        'site_description': parms.SITE_DESCRIPTION,
+        'features': parms.FEATURES,
+    }
+    return render(request, 'about.html', context)
+
+
+def pricing_page(request):
+    """
+    Pricing page for Post This Today
+    """
+    context = {
+        'site_name': parms.SITE_NAME,
+        'pricing_tiers': parms.PRICING_TIERS,
+    }
+    return render(request, 'pricing.html', context)
+
+
+def mystyle(request):
+    """
+    Updated function name for the first step of the workflow
+    This replaces the old writing_samples function
+    """
+    if request.method == 'POST':
+        # TODO: Handle file upload processing
+        # Navigate to step 2
+        return redirect('trending_topics')
+
+    context = {
+        'current_step': 1,
+        'total_steps': TOTAL_STEPS,
+        'step_name': 'My Style'
+    }
+    return render(request, 'postthistoday/mystyle.html', context)
+
+
+
+
+
+
 
 # =============================================================================
 # STEP VIEWS - 5-Step Content Creation Workflow
 # =============================================================================
 
-def writing_samples(request):
-    """
-    Step 1: Writing Samples Upload
-
-    Allows users to upload writing samples that will be used to analyze
-    their writing style and tone for content generation.
-
-    GET: Display upload interface
-    POST: Process uploaded files and navigate to step 2
-    """
+def mystyle(request):
     if request.method == 'POST':
         # TODO: Handle file upload processing
         # Navigate to step 2
@@ -69,7 +135,7 @@ def writing_samples(request):
         'total_steps': TOTAL_STEPS,
         'step_name': 'Writing Samples'
     }
-    return render(request, 'postthistoday/writing_samples.html', context)
+    return render(request, 'postthistoday/mystyle.html', context)
 
 
 def trending_topics(request):
@@ -166,7 +232,7 @@ def customize_content(request):
             tone=tone,
             length=length,
             custom_topics=topics,
-            writing_samples=None
+            mystyle=None
         )
 
         print(f"🔵 AI result received: success={ai_result.get('success')}")  # Add this
@@ -235,7 +301,7 @@ def preview_and_share(request):
                 tone=request.session.get('tone', 'Professional'),
                 length=request.session.get('length', 'Medium'),
                 custom_topics=request.session.get('custom_topics', []),
-                writing_samples=None
+                mystyle=None
             )
 
             # Update session with new AI content
@@ -293,7 +359,7 @@ def get_trending_topics():
     return TRENDING_TOPICS_DATA
 
 
-def generate_content(writing_samples, selected_topic, content_prompt, tone, length, custom_topics):
+def generate_content(mystyle, selected_topic, content_prompt, tone, length, custom_topics):
     """
     Generate LinkedIn post content using AI based on user inputs.
 
@@ -304,7 +370,7 @@ def generate_content(writing_samples, selected_topic, content_prompt, tone, leng
     - Incorporate custom topics
 
     Args:
-        writing_samples: Uploaded writing samples
+        mystyle: Uploaded writing samples
         selected_topic: Chosen trending topic
         content_prompt: User's specific content ideas
         tone: Selected tone (Professional, Funny, etc.)

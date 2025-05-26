@@ -1,0 +1,211 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ site_name }} - {{ site_tagline }}{% endblock %}
+{% block meta_description %}{{ site_description }}{% endblock %}
+
+{% block content %}
+    <!-- Hero Section -->
+    <section class="bg-gradient-to-br from-purple-50 to-white py-20">
+        <div class="max-w-6xl mx-auto px-6">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+                <div>
+                    <h1 class="text-5xl font-bold text-gray-900 mb-6">
+                        Create LinkedIn Posts That Sound Like <span class="text-purple-800">You</span>
+                    </h1>
+                    <p class="text-xl text-gray-600 mb-8">
+                        {{ site_description }} Transform trending topics into engaging posts that match your unique voice and style.
+                    </p>
+                    <div class="flex flex-col sm:flex-row gap-4">
+                        <a href="{% url 'account_signup' %}" class="bg-purple-800 text-white px-8 py-4 rounded-lg hover:bg-purple-900 transition-colors text-center font-semibold">
+                            {{ cta_primary }}
+                        </a>
+                        <a href="#how-it-works" class="border border-purple-800 text-purple-800 px-8 py-4 rounded-lg hover:bg-purple-50 transition-colors text-center font-semibold">
+                            {{ cta_secondary }}
+                        </a>
+                    </div>
+                </div>
+                <div class="relative">
+                    <!-- Hero Image Placeholder -->
+                    <div class="bg-gradient-to-br from-purple-100 to-purple-200 rounded-2xl p-8 shadow-2xl">
+                        <div class="bg-white rounded-lg p-6 shadow-lg">
+                            <div class="flex items-center space-x-3 mb-4">
+                                <div class="w-10 h-10 bg-purple-800 rounded-full"></div>
+                                <div>
+                                    <div class="h-3 bg-gray-300 rounded w-24 mb-1"></div>
+                                    <div class="h-2 bg-gray-200 rounded w-32"></div>
+                                </div>
+                            </div>
+                            <div class="space-y-2">
+                                <div class="h-3 bg-gray-200 rounded w-full"></div>
+                                <div class="h-3 bg-gray-200 rounded w-5/6"></div>
+                                <div class="h-3 bg-gray-200 rounded w-4/5"></div>
+                            </div>
+                            <div class="mt-6 flex space-x-4 text-gray-400">
+                                <i data-lucide="thumbs-up" class="h-5 w-5"></i>
+                                <i data-lucide="message-circle" class="h-5 w-5"></i>
+                                <i data-lucide="share" class="h-5 w-5"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- How It Works Section -->
+    <section id="how-it-works" class="py-20 bg-white">
+        <div class="max-w-6xl mx-auto px-6">
+            <div class="text-center mb-12">
+                <h2 class="text-4xl font-bold text-gray-900 mb-4">How It Works</h2>
+                <p class="text-xl text-gray-600">Five simple steps to create engaging LinkedIn content</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-5 gap-8">
+                {% for step in workflow_steps %}
+                    <div class="text-center">
+                        <div class="bg-purple-100 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
+                            <i data-lucide="{{ step.icon }}" class="h-8 w-8 text-purple-800"></i>
+                        </div>
+                        <h3 class="font-semibold text-gray-900 mb-2">{{ step.title }}</h3>
+                        <p class="text-sm text-gray-600">{{ step.description }}</p>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="py-20 bg-stone-50">
+        <div class="max-w-6xl mx-auto px-6">
+            <div class="text-center mb-12">
+                <h2 class="text-4xl font-bold text-gray-900 mb-4">Why Choose Post This Today?</h2>
+                <p class="text-xl text-gray-600">Powerful features designed for LinkedIn success</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                {% for feature in features %}
+                    <div class="bg-white p-6 rounded-lg shadow-sm border border-stone-200 hover:shadow-lg transition-shadow">
+                        <div class="bg-purple-100 rounded-full w-12 h-12 flex items-center justify-center mb-4">
+                            <i data-lucide="{{ feature.icon }}" class="h-6 w-6 text-purple-800"></i>
+                        </div>
+                        <h3 class="text-lg font-semibold text-gray-900 mb-2">{{ feature.title }}</h3>
+                        <p class="text-gray-600">{{ feature.description }}</p>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </section>
+
+    <!-- Demo Section -->
+    <section class="py-20 bg-white">
+        <div class="max-w-6xl mx-auto px-6">
+            <div class="text-center mb-12">
+                <h2 class="text-4xl font-bold text-gray-900 mb-4">See It In Action</h2>
+                <p class="text-xl text-gray-600">Transform your ideas into engaging LinkedIn posts</p>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+                <div>
+                    <h3 class="text-2xl font-semibold text-gray-900 mb-4">Before: Your Raw Ideas</h3>
+                    <div class="bg-stone-100 rounded-lg p-6 mb-8">
+                        <p class="text-gray-700 italic">
+                            "Want to talk about how AI is changing marketing. Think it's important for businesses to adapt.
+                            Should mention automation and personalization."
+                        </p>
+                    </div>
+
+                    <h3 class="text-2xl font-semibold text-gray-900 mb-4">After: LinkedIn-Ready Post</h3>
+                    <div class="bg-white rounded-lg p-6 border-2 border-purple-200">
+                        <p class="text-gray-900 mb-4">
+                            🚀 The marketing landscape is transforming before our eyes, and AI is the catalyst.
+                        </p>
+                        <p class="text-gray-900 mb-4">
+                            Here's what forward-thinking businesses are doing RIGHT NOW:
+                        </p>
+                        <p class="text-gray-900 mb-4">
+                            ✅ Automating repetitive tasks to focus on strategy<br>
+                            ✅ Creating hyper-personalized customer experiences at scale<br>
+                            ✅ Analyzing data patterns humans might miss
+                        </p>
+                        <p class="text-gray-900 mb-4">
+                            The question isn't whether to adapt—it's how quickly you can integrate these tools into your workflow.
+                        </p>
+                        <p class="text-gray-700">
+                            What's your take on AI in marketing? 👇
+                        </p>
+                        <p class="text-purple-800 mt-4">
+                            #MarketingAI #DigitalTransformation #MarketingStrategy
+                        </p>
+                    </div>
+                </div>
+
+                <div>
+                    <!-- Workflow Screenshots Placeholder -->
+                    <div class="space-y-4">
+                        <div class="bg-gradient-to-r from-purple-100 to-purple-200 rounded-lg p-4">
+                            <div class="bg-white rounded p-4">
+                                <div class="h-3 bg-gray-300 rounded w-1/3 mb-3"></div>
+                                <div class="border-2 border-dashed border-gray-300 rounded p-8 text-center">
+                                    <i data-lucide="upload" class="h-12 w-12 text-gray-400 mx-auto mb-2"></i>
+                                    <div class="h-2 bg-gray-200 rounded w-2/3 mx-auto"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="bg-gradient-to-r from-purple-100 to-purple-200 rounded-lg p-4">
+                            <div class="bg-white rounded p-4">
+                                <div class="h-3 bg-gray-300 rounded w-1/3 mb-3"></div>
+                                <div class="space-y-2">
+                                    <div class="border border-purple-300 bg-purple-50 rounded p-3">
+                                        <div class="h-2 bg-purple-200 rounded w-full"></div>
+                                    </div>
+                                    <div class="border border-gray-200 rounded p-3">
+                                        <div class="h-2 bg-gray-200 rounded w-full"></div>
+                                    </div>
+                                    <div class="border border-gray-200 rounded p-3">
+                                        <div class="h-2 bg-gray-200 rounded w-full"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ Section -->
+    <section class="py-20 bg-stone-50">
+        <div class="max-w-4xl mx-auto px-6">
+            <div class="text-center mb-12">
+                <h2 class="text-4xl font-bold text-gray-900 mb-4">Frequently Asked Questions</h2>
+                <p class="text-xl text-gray-600">Everything you need to know about Post This Today</p>
+            </div>
+
+            <div class="space-y-6">
+                {% for item in faq_items %}
+                    <div class="bg-white rounded-lg p-6 shadow-sm border border-stone-200">
+                        <h3 class="text-lg font-semibold text-gray-900 mb-3">{{ item.question }}</h3>
+                        <p class="text-gray-600">{{ item.answer }}</p>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="py-20 bg-purple-800">
+        <div class="max-w-4xl mx-auto px-6 text-center">
+            <h2 class="text-4xl font-bold text-white mb-6">
+                Ready to Transform Your LinkedIn Presence?
+            </h2>
+            <p class="text-xl text-purple-100 mb-8">
+                Join thousands of professionals creating engaging content with AI
+            </p>
+            <a href="{% url 'account_signup' %}" class="inline-block bg-white text-purple-800 px-8 py-4 rounded-lg hover:bg-purple-50 transition-colors font-semibold text-lg">
+                {{ cta_primary }}
+            </a>
+        </div>
+    </section>
+{% endblock %}

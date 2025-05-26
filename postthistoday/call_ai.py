@@ -31,7 +31,7 @@ API_KEY = get_claude_api_key()
 
 
 def generate_linkedin_post(selected_topic=None, content_prompt=None, tone='Professional',
-                           length='Medium', custom_topics=None, writing_samples=None):
+                           length='Medium', custom_topics=None, mystyle=None):
     """Generate LinkedIn post using Claude AI"""
 
     if not API_KEY:

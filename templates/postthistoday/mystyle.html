@@ -1,0 +1,361 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <!-- Step Indicator -->
+    <div class="relative mb-8">
+        <div class="hidden sm:flex items-center justify-between">
+            <div class="relative flex items-center">
+                <div class="w-8 h-8 rounded-full flex items-center justify-center bg-purple-800 text-white">
+                    <span>1</span>
+                </div>
+                <span class="ml-2 text-sm text-purple-800 font-medium">My Style</span>
+                <div class="w-full h-0.5 mx-4 bg-stone-200"></div>
+            </div>
+            <div class="relative flex items-center">
+                <div class="w-8 h-8 rounded-full flex items-center justify-center bg-stone-200 text-gray-600">
+                    <span>2</span>
+                </div>
+                <span class="ml-2 text-sm text-gray-500">Trending Topics</span>
+                <div class="w-full h-0.5 mx-4 bg-stone-200"></div>
+            </div>
+            <div class="relative flex items-center">
+                <div class="w-8 h-8 rounded-full flex items-center justify-center bg-stone-200 text-gray-600">
+                    <span>3</span>
+                </div>
+                <span class="ml-2 text-sm text-gray-500">Content Prompt</span>
+                <div class="w-full h-0.5 mx-4 bg-stone-200"></div>
+            </div>
+            <div class="relative flex items-center">
+                <div class="w-8 h-8 rounded-full flex items-center justify-center bg-stone-200 text-gray-600">
+                    <span>4</span>
+                </div>
+                <span class="ml-2 text-sm text-gray-500">Customize</span>
+                <div class="w-full h-0.5 mx-4 bg-stone-200"></div>
+            </div>
+            <div class="relative flex items-center">
+                <div class="w-8 h-8 rounded-full flex items-center justify-center bg-stone-200 text-gray-600">
+                    <span>5</span>
+                </div>
+                <span class="ml-2 text-sm text-gray-500">Preview & Share</span>
+            </div>
+        </div>
+
+        <!-- Mobile Step Indicator -->
+        <div class="sm:hidden text-center">
+            <p class="text-sm font-medium text-purple-800">
+                Step {{ current_step }} of {{ total_steps }}
+            </p>
+            <p class="mt-1 text-lg font-medium text-gray-900">
+                {{ step_name }}
+            </p>
+        </div>
+    </div>
+
+    <!-- My Style Form -->
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+
+        <!-- Section 1: Best Performing Posts -->
+        <section class="bg-white rounded-lg border border-stone-200 p-6 mb-6">
+            <h2 class="text-lg font-semibold text-gray-900 mb-2">
+                My Best Performing Posts
+            </h2>
+            <p class="text-gray-600 text-sm mb-6">
+                Upload your most successful posts to teach the AI what works
+            </p>
+            <div class="mb-4">
+                <button type="button" class="w-full border-2 border-dashed border-stone-300 rounded-lg p-6 text-center hover:border-purple-300 transition-colors" onclick="triggerFileUpload('successful-posts')">
+                    <i data-lucide="plus" class="mx-auto h-8 w-8 text-stone-400 mb-2"></i>
+                    <p class="text-gray-600">Add a successful post (0/5)</p>
+                </button>
+                <input type="file" id="successful-posts" name="successful_posts" multiple accept=".txt,.pdf,.docx" class="hidden" onchange="handleSuccessfulPostUpload(this)">
+            </div>
+            <div id="successful-posts-list" class="space-y-3">
+                <!-- Uploaded successful posts will appear here -->
+            </div>
+        </section>
+
+        <!-- Section 2: Writing Samples Library -->
+        <section class="bg-white rounded-lg border border-stone-200 p-6 mb-6">
+            <h2 class="text-lg font-semibold text-gray-900 mb-2">
+                Writing Samples Library
+            </h2>
+            <p class="text-gray-600 text-sm mb-6">
+                Upload examples of your writing to teach AI your style
+            </p>
+            <div class="border-2 border-dashed border-stone-300 rounded-lg p-6 text-center hover:border-purple-300 transition-colors mb-4 cursor-pointer" onclick="triggerFileUpload('writing-samples')">
+                <i data-lucide="upload" class="mx-auto h-12 w-12 text-stone-400 mb-4"></i>
+                <p class="text-gray-600 mb-2">
+                    Drag and drop writing samples here
+                </p>
+                <p class="text-sm text-gray-500 mb-4">
+                    PDFs, Word docs, or text files
+                </p>
+                <button type="button" class="bg-purple-800 text-white px-4 py-2 rounded-lg hover:bg-purple-900 transition-colors">
+                    Choose Files
+                </button>
+            </div>
+            <input type="file" id="writing-samples" name="writing_samples" multiple accept=".txt,.pdf,.docx" class="hidden" onchange="handleWritingSampleUpload(this)">
+
+            <div id="writing-samples-list" class="space-y-3">
+                <!-- Sample uploaded file -->
+                <div class="flex items-center justify-between p-3 bg-stone-50 rounded-lg">
+                    <div class="flex items-center space-x-3">
+                        <i data-lucide="file-text" class="h-5 w-5 text-stone-400"></i>
+                        <div>
+                            <p class="text-sm font-medium text-gray-900">
+                                quarterly-report.pdf
+                            </p>
+                            <p class="text-xs text-gray-500">
+                                Business Report • Added today
+                            </p>
+                        </div>
+                    </div>
+                    <button type="button" class="text-gray-400 hover:text-gray-600" onclick="removeFile(this)">
+                        <i data-lucide="x" class="h-4 w-4"></i>
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 3: Default Preferences -->
+        <section class="bg-white rounded-lg border border-stone-200 p-6 mb-6">
+            <h2 class="text-lg font-semibold text-gray-900 mb-6">
+                Default Preferences
+            </h2>
+            <div class="space-y-6">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">
+                        Tone
+                    </label>
+                    <div class="relative">
+                        <select name="default_tone" class="w-full p-3 border border-stone-200 rounded-lg appearance-none bg-white focus:ring-2 focus:ring-purple-300 focus:border-purple-300 transition-colors">
+                            <option value="Professional">Professional</option>
+                            <option value="Casual">Casual</option>
+                            <option value="Funny">Funny</option>
+                            <option value="Authoritative">Authoritative</option>
+                            <option value="Conversational">Conversational</option>
+                        </select>
+                        <i data-lucide="chevron-down" class="absolute right-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400"></i>
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-4">
+                        Length Preference
+                    </label>
+                    <div class="space-y-3">
+                        <input type="range" name="default_length" min="1" max="10" value="5" class="w-full h-2 bg-stone-200 rounded-lg appearance-none cursor-pointer accent-purple-800" oninput="updateLengthDisplay(this.value)">
+                        <div class="flex justify-between text-xs text-gray-500">
+                            <span>Shorter (100-150 words)</span>
+                            <span>Longer (300+ words)</span>
+                        </div>
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">
+                        Emoji Usage
+                    </label>
+                    <div class="grid grid-cols-3 gap-2">
+                        <button type="button" class="emoji-option p-3 border border-stone-200 rounded-lg hover:border-purple-300 hover:bg-purple-50 transition-colors text-center" data-value="none" onclick="selectEmojiUsage(this)">
+                            <i data-lucide="smile" class="h-5 w-5 mx-auto mb-1 text-gray-400"></i>
+                            <span class="text-sm text-gray-600">None</span>
+                        </button>
+                        <button type="button" class="emoji-option p-3 border border-purple-300 bg-purple-50 rounded-lg transition-colors text-center" data-value="few" onclick="selectEmojiUsage(this)">
+                            <div class="flex justify-center mb-1 text-gray-600">
+                                <i data-lucide="smile" class="h-5 w-5"></i>
+                            </div>
+                            <span class="text-sm text-gray-600">Few</span>
+                        </button>
+                        <button type="button" class="emoji-option p-3 border border-stone-200 rounded-lg hover:border-purple-300 hover:bg-purple-50 transition-colors text-center" data-value="many" onclick="selectEmojiUsage(this)">
+                            <div class="flex justify-center gap-0.5 mb-1 text-gray-600">
+                                <i data-lucide="smile" class="h-5 w-5"></i>
+                                <i data-lucide="smile" class="h-5 w-5"></i>
+                            </div>
+                            <span class="text-sm text-gray-600">Many</span>
+                        </button>
+                    </div>
+                    <input type="hidden" name="emoji_usage" value="few">
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 4: Voice Characteristics -->
+        <section class="bg-white rounded-lg border border-stone-200 p-6 mb-8">
+            <h2 class="text-lg font-semibold text-gray-900 mb-6">
+                Voice Characteristics
+            </h2>
+            <div class="space-y-6">
+                <div>
+                    <div class="flex justify-between mb-2">
+                        <label class="text-sm font-medium text-gray-700">
+                            Communication Style
+                        </label>
+                        <div class="text-xs text-gray-500 flex gap-8">
+                            <span>Direct</span>
+                            <span>Conversational</span>
+                        </div>
+                    </div>
+                    <input type="range" name="communication_style" min="1" max="10" value="5" class="w-full h-2 bg-stone-200 rounded-lg appearance-none cursor-pointer accent-purple-800">
+                </div>
+                <div>
+                    <div class="flex justify-between mb-2">
+                        <label class="text-sm font-medium text-gray-700">
+                            Content Focus
+                        </label>
+                        <div class="text-xs text-gray-500 flex gap-8">
+                            <span>Data-driven</span>
+                            <span>Story-focused</span>
+                        </div>
+                    </div>
+                    <input type="range" name="content_focus" min="1" max="10" value="5" class="w-full h-2 bg-stone-200 rounded-lg appearance-none cursor-pointer accent-purple-800">
+                </div>
+                <div>
+                    <div class="flex justify-between mb-2">
+                        <label class="text-sm font-medium text-gray-700">
+                            Technical Level
+                        </label>
+                        <div class="text-xs text-gray-500 flex gap-8">
+                            <span>Technical</span>
+                            <span>Accessible</span>
+                        </div>
+                    </div>
+                    <input type="range" name="technical_level" min="1" max="10" value="5" class="w-full h-2 bg-stone-200 rounded-lg appearance-none cursor-pointer accent-purple-800">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-3">
+                        Writing Quirks
+                    </label>
+                    <div class="flex flex-wrap gap-2">
+                        <button type="button" class="quirk-button px-3 py-1 rounded-full text-sm bg-purple-50 text-purple-800 hover:bg-purple-100" data-quirk="uses_questions" onclick="toggleQuirk(this)">
+                            Uses questions
+                        </button>
+                        <button type="button" class="quirk-button px-3 py-1 rounded-full text-sm border border-stone-200 text-gray-600 hover:border-purple-300 hover:bg-purple-50" data-quirk="personal_anecdotes" onclick="toggleQuirk(this)">
+                            Personal anecdotes
+                        </button>
+                        <button type="button" class="quirk-button px-3 py-1 rounded-full text-sm border border-stone-200 text-gray-600 hover:border-purple-300 hover:bg-purple-50" data-quirk="data_heavy" onclick="toggleQuirk(this)">
+                            Data-heavy
+                        </button>
+                        <button type="button" class="quirk-button px-3 py-1 rounded-full text-sm border border-stone-200 text-gray-600 hover:border-purple-300 hover:bg-purple-50" data-quirk="uses_metaphors" onclick="toggleQuirk(this)">
+                            Uses metaphors
+                        </button>
+                    </div>
+                    <input type="hidden" name="writing_quirks" value="uses_questions">
+                </div>
+            </div>
+        </section>
+
+        <!-- Continue Button -->
+        <div class="mt-8">
+            <button type="submit" class="w-full bg-purple-800 text-white py-3 px-6 rounded-lg hover:bg-purple-900 transition-colors">
+                Continue
+            </button>
+        </div>
+    </form>
+{% endblock %}
+
+{% block extra_js %}
+    <script>
+        // File upload handlers
+        function triggerFileUpload(inputId) {
+            document.getElementById(inputId).click();
+        }
+
+        function handleSuccessfulPostUpload(input) {
+            const files = input.files;
+            const container = document.getElementById('successful-posts-list');
+
+            for (let file of files) {
+                if (container.children.length >= 5) {
+                    alert('Maximum 5 successful posts allowed');
+                    break;
+                }
+
+                const fileDiv = createFileElement(file, 'Successful Post');
+                container.appendChild(fileDiv);
+            }
+
+            updateSuccessfulPostsCounter();
+        }
+
+        function handleWritingSampleUpload(input) {
+            const files = input.files;
+            const container = document.getElementById('writing-samples-list');
+
+            for (let file of files) {
+                const fileDiv = createFileElement(file, 'Writing Sample');
+                container.appendChild(fileDiv);
+            }
+        }
+
+        function createFileElement(file, type) {
+            const div = document.createElement('div');
+            div.className = 'flex items-center justify-between p-3 bg-stone-50 rounded-lg';
+            div.innerHTML = `
+                <div class="flex items-center space-x-3">
+                    <i data-lucide="file-text" class="h-5 w-5 text-stone-400"></i>
+                    <div>
+                        <p class="text-sm font-medium text-gray-900">${file.name}</p>
+                        <p class="text-xs text-gray-500">${type} • Added just now</p>
+                    </div>
+                </div>
+                <button type="button" class="text-gray-400 hover:text-gray-600" onclick="removeFile(this)">
+                    <i data-lucide="x" class="h-4 w-4"></i>
+                </button>
+            `;
+
+            // Reinitialize Lucide icons
+            lucide.createIcons();
+            return div;
+        }
+
+        function removeFile(button) {
+            button.closest('.flex').remove();
+            updateSuccessfulPostsCounter();
+        }
+
+        function updateSuccessfulPostsCounter() {
+            const count = document.getElementById('successful-posts-list').children.length;
+            const button = document.querySelector('[onclick="triggerFileUpload(\'successful-posts\')"] p');
+            button.textContent = `Add a successful post (${count}/5)`;
+        }
+
+        // Preference handlers
+        function selectEmojiUsage(button) {
+            // Reset all emoji buttons
+            document.querySelectorAll('.emoji-option').forEach(btn => {
+                btn.classList.remove('border-purple-300', 'bg-purple-50');
+                btn.classList.add('border-stone-200');
+            });
+
+            // Highlight selected button
+            button.classList.remove('border-stone-200');
+            button.classList.add('border-purple-300', 'bg-purple-50');
+
+            // Update hidden input
+            document.querySelector('input[name="emoji_usage"]').value = button.dataset.value;
+        }
+
+        function toggleQuirk(button) {
+            const isActive = button.classList.contains('bg-purple-50');
+
+            if (isActive) {
+                // Deactivate
+                button.classList.remove('bg-purple-50', 'text-purple-800');
+                button.classList.add('border', 'border-stone-200', 'text-gray-600');
+            } else {
+                // Activate
+                button.classList.remove('border', 'border-stone-200', 'text-gray-600');
+                button.classList.add('bg-purple-50', 'text-purple-800');
+            }
+
+            // Update hidden input with active quirks
+            const activeQuirks = Array.from(document.querySelectorAll('.quirk-button.bg-purple-50'))
+                .map(btn => btn.dataset.quirk);
+            document.querySelector('input[name="writing_quirks"]').value = activeQuirks.join(',');
+        }
+
+        function updateLengthDisplay(value) {
+            // Optional: Add real-time length preference display
+        }
+    </script>
+{% endblock %}
