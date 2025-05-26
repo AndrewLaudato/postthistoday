@@ -1,0 +1,208 @@
+<!-- Create templates/postthistoday/preview_and_share.html -->
+{% extends 'base.html' %}
+
+{% block content %}
+    <!-- Step Indicator -->
+    <div class="relative mb-8">
+        <div class="hidden sm:flex items-center justify-between">
+            <div class="relative flex items-center">
+                <div class="w-8 h-8 rounded-full flex items-center justify-center bg-purple-800 text-white">
+                    <i data-lucide="check" class="w-5 h-5"></i>
+                </div>
+                <span class="ml-2 text-sm text-gray-500">Writing Samples</span>
+                <div class="w-full h-0.5 mx-4 bg-purple-800"></div>
+            </div>
+            <div class="relative flex items-center">
+                <div class="w-8 h-8 rounded-full flex items-center justify-center bg-purple-800 text-white">
+                    <i data-lucide="check" class="w-5 h-5"></i>
+                </div>
+                <span class="ml-2 text-sm text-gray-500">Trending Topics</span>
+                <div class="w-full h-0.5 mx-4 bg-purple-800"></div>
+            </div>
+            <div class="relative flex items-center">
+                <div class="w-8 h-8 rounded-full flex items-center justify-center bg-purple-800 text-white">
+                    <i data-lucide="check" class="w-5 h-5"></i>
+                </div>
+                <span class="ml-2 text-sm text-gray-500">Content Prompt</span>
+                <div class="w-full h-0.5 mx-4 bg-purple-800"></div>
+            </div>
+            <div class="relative flex items-center">
+                <div class="w-8 h-8 rounded-full flex items-center justify-center bg-purple-800 text-white">
+                    <i data-lucide="check" class="w-5 h-5"></i>
+                </div>
+                <span class="ml-2 text-sm text-gray-500">Customize</span>
+                <div class="w-full h-0.5 mx-4 bg-purple-800"></div>
+            </div>
+            <div class="relative flex items-center">
+                <div class="w-8 h-8 rounded-full flex items-center justify-center bg-purple-800 text-white">
+                    <span>5</span>
+                </div>
+                <span class="ml-2 text-sm text-purple-800 font-medium">Preview & Share</span>
+            </div>
+        </div>
+
+        <!-- Mobile Step Indicator -->
+        <div class="sm:hidden text-center">
+            <p class="text-sm font-medium text-purple-800">
+                Step {{ current_step }} of {{ total_steps }}
+            </p>
+            <p class="mt-1 text-lg font-medium text-gray-900">
+                {{ step_name }}
+            </p>
+        </div>
+    </div>
+
+    <!-- Preview & Share Section -->
+    <div class="bg-white rounded-lg border border-stone-200 p-6">
+        <div class="flex items-center justify-between mb-4">
+            <h3 class="text-lg font-semibold text-gray-900">Preview & Share</h3>
+            <form method="post" style="display: inline;">
+                {% csrf_token %}
+                <input type="hidden" name="action" value="regenerate">
+                <button type="submit" class="text-gray-500 hover:text-purple-800 transition-colors" title="Regenerate content">
+                    <i data-lucide="refresh-cw" class="h-5 w-5"></i>
+                </button>
+            </form>
+        </div>
+
+        <!-- Generated Content Preview -->
+        <div class="bg-stone-50 rounded-lg p-4 mb-6 min-h-[200px]">
+            <div class="whitespace-pre-line text-gray-700 leading-relaxed">{{ generated_content }}</div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="space-y-3 mb-6">
+            <form method="post" style="display: inline; width: 100%;">
+                {% csrf_token %}
+                <input type="hidden" name="action" value="share_linkedin">
+                <button type="submit" class="w-full bg-purple-800 text-white py-3 px-4 rounded-lg hover:bg-purple-900 transition-colors flex items-center justify-center space-x-2">
+                    <i data-lucide="linkedin" class="h-5 w-5"></i>
+                    <span>Share to LinkedIn</span>
+                </button>
+            </form>
+
+            <button onclick="copyToClipboard()" class="w-full border border-stone-200 text-gray-700 py-3 px-4 rounded-lg hover:bg-stone-50 flex items-center justify-center space-x-2">
+                <i data-lucide="copy" class="h-5 w-5"></i>
+                <span>Copy to Clipboard</span>
+            </button>
+        </div>
+
+        <!-- LinkedIn Preview -->
+        <div class="p-4 bg-purple-50 rounded-lg">
+            <h4 class="font-medium text-purple-800 mb-2">LinkedIn Preview</h4>
+            <div class="bg-white rounded border border-stone-200 p-3">
+                <div class="flex items-center space-x-3 mb-3">
+                    <div class="w-8 h-8 bg-stone-200 rounded-full flex items-center justify-center">
+                        <i data-lucide="user" class="h-4 w-4 text-gray-400"></i>
+                    </div>
+                    <div>
+                        <p class="font-medium text-sm text-gray-800">Your Name</p>
+                        <p class="text-xs text-gray-500">Your Title • Now</p>
+                    </div>
+                </div>
+                <div class="text-sm text-gray-600 whitespace-pre-line">{{ generated_content|truncatewords:30 }}...</div>
+                <div class="mt-3 flex items-center space-x-4 text-xs text-gray-500">
+                    <span class="flex items-center">
+                        <i data-lucide="thumbs-up" class="h-3 w-3 mr-1"></i>
+                        Like
+                    </span>
+                    <span class="flex items-center">
+                        <i data-lucide="message-circle" class="h-3 w-3 mr-1"></i>
+                        Comment
+                    </span>
+                    <span class="flex items-center">
+                        <i data-lucide="share" class="h-3 w-3 mr-1"></i>
+                        Share
+                    </span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Summary of Selections -->
+        {% if selected_topic or tone or custom_topics %}
+            <div class="mt-6 p-4 bg-gray-50 rounded-lg">
+                <h4 class="font-medium text-gray-800 mb-2">Content Settings</h4>
+                <div class="text-sm text-gray-600 space-y-1">
+                    {% if selected_topic %}
+                        <p><strong>Topic:</strong> {{ selected_topic|truncatewords:10 }}</p>
+                    {% endif %}
+                    {% if tone %}
+                        <p><strong>Tone:</strong> {{ tone }}</p>
+                    {% endif %}
+                    {% if length %}
+                        <p><strong>Length:</strong> {{ length }}</p>
+                    {% endif %}
+                    {% if custom_topics %}
+                        <p><strong>Additional Topics:</strong>
+                            {% for topic in custom_topics %}
+                                <span class="inline-block bg-purple-100 text-purple-800 px-2 py-0.5 rounded text-xs mr-1">{{ topic }}</span>
+                            {% endfor %}
+                        </p>
+                    {% endif %}
+                </div>
+            </div>
+        {% endif %}
+
+        <!-- Navigation -->
+        <div class="mt-8">
+            <a href="{% url 'customize_content' %}" class="w-full py-3 px-6 border border-stone-200 rounded-lg hover:bg-stone-50 text-gray-700 text-center block">
+                Back to Customize
+            </a>
+        </div>
+    </div>
+{% endblock %}
+
+{% block extra_js %}
+    <script>
+        function copyToClipboard() {
+            const content = `{{ generated_content|escapejs }}`;
+
+            if (navigator.clipboard && window.isSecureContext) {
+                // Use modern clipboard API
+                navigator.clipboard.writeText(content).then(function() {
+                    showCopyFeedback();
+                }).catch(function(err) {
+                    fallbackCopyToClipboard(content);
+                });
+            } else {
+                // Fallback for older browsers
+                fallbackCopyToClipboard(content);
+            }
+        }
+
+        function fallbackCopyToClipboard(text) {
+            const textArea = document.createElement('textarea');
+            textArea.value = text;
+            textArea.style.position = 'fixed';
+            textArea.style.left = '-999999px';
+            textArea.style.top = '-999999px';
+            document.body.appendChild(textArea);
+            textArea.focus();
+            textArea.select();
+
+            try {
+                document.execCommand('copy');
+                showCopyFeedback();
+            } catch (err) {
+                console.error('Failed to copy text: ', err);
+                alert('Failed to copy to clipboard. Please select and copy the text manually.');
+            }
+
+            document.body.removeChild(textArea);
+        }
+
+        function showCopyFeedback() {
+            const button = event.target.closest('button');
+            const originalText = button.innerHTML;
+
+            button.innerHTML = '<i data-lucide="check" class="h-5 w-5"></i><span>Copied!</span>';
+            button.classList.add('bg-green-50', 'text-green-700', 'border-green-200');
+
+            setTimeout(() => {
+                button.innerHTML = originalText;
+                button.classList.remove('bg-green-50', 'text-green-700', 'border-green-200');
+                lucide.createIcons();
+            }, 2000);
+        }
+    </script>
+{% endblock %}

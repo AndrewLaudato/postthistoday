@@ -1,0 +1,91 @@
+<!-- Create templates/postthistoday/content_prompt.html -->
+{% extends 'base.html' %}
+
+{% block content %}
+    <!-- Step Indicator -->
+    <div class="relative mb-8">
+        <div class="hidden sm:flex items-center justify-between">
+            <div class="relative flex items-center">
+                <div class="w-8 h-8 rounded-full flex items-center justify-center bg-purple-800 text-white">
+                    <i data-lucide="check" class="w-5 h-5"></i>
+                </div>
+                <span class="ml-2 text-sm text-gray-500">Writing Samples</span>
+                <div class="w-full h-0.5 mx-4 bg-purple-800"></div>
+            </div>
+            <div class="relative flex items-center">
+                <div class="w-8 h-8 rounded-full flex items-center justify-center bg-purple-800 text-white">
+                    <i data-lucide="check" class="w-5 h-5"></i>
+                </div>
+                <span class="ml-2 text-sm text-gray-500">Trending Topics</span>
+                <div class="w-full h-0.5 mx-4 bg-purple-800"></div>
+            </div>
+            <div class="relative flex items-center">
+                <div class="w-8 h-8 rounded-full flex items-center justify-center bg-purple-800 text-white">
+                    <span>3</span>
+                </div>
+                <span class="ml-2 text-sm text-purple-800 font-medium">Content Prompt</span>
+                <div class="w-full h-0.5 mx-4 bg-stone-200"></div>
+            </div>
+            <div class="relative flex items-center">
+                <div class="w-8 h-8 rounded-full flex items-center justify-center bg-stone-200 text-gray-600">
+                    <span>4</span>
+                </div>
+                <span class="ml-2 text-sm text-gray-500">Customize</span>
+                <div class="w-full h-0.5 mx-4 bg-stone-200"></div>
+            </div>
+            <div class="relative flex items-center">
+                <div class="w-8 h-8 rounded-full flex items-center justify-center bg-stone-200 text-gray-600">
+                    <span>5</span>
+                </div>
+                <span class="ml-2 text-sm text-gray-500">Preview & Share</span>
+            </div>
+        </div>
+
+        <!-- Mobile Step Indicator -->
+        <div class="sm:hidden text-center">
+            <p class="text-sm font-medium text-purple-800">
+                Step {{ current_step }} of {{ total_steps }}
+            </p>
+            <p class="mt-1 text-lg font-medium text-gray-900">
+                {{ step_name }}
+            </p>
+        </div>
+    </div>
+
+    <!-- Content Prompt Section -->
+    <form method="post">
+        {% csrf_token %}
+        <div class="bg-white rounded-lg border border-stone-200 p-6">
+            <h3 class="text-lg font-semibold text-gray-900 mb-4">
+                Content Prompt
+            </h3>
+
+            {% if selected_topic %}
+                <div class="mb-4 p-3 bg-purple-50 rounded-lg">
+                    <p class="text-sm text-purple-800">
+                        <strong>Selected topic:</strong> {{ selected_topic }}
+                    </p>
+                </div>
+            {% endif %}
+
+            <textarea
+                name="content_prompt"
+                class="w-full h-32 p-3 border border-stone-200 rounded-lg resize-none focus:ring-2 focus:ring-purple-300 focus:border-purple-300 transition-colors"
+                placeholder="{% if selected_topic %}Add specific angles or points you'd like to cover about this topic...{% else %}Describe what you want to post about today...{% endif %}"
+            >{{ content_prompt }}</textarea>
+
+            <p class="text-sm text-gray-500 mt-2 mb-8">
+                Be specific about your angle, key points, or the message you want to convey.
+            </p>
+
+            <div class="flex gap-3">
+                <a href="{% url 'trending_topics' %}" class="flex-1 py-3 px-6 border border-stone-200 rounded-lg hover:bg-stone-50 text-gray-700 text-center">
+                    Back
+                </a>
+                <button type="submit" class="flex-1 bg-purple-800 text-white py-3 px-6 rounded-lg hover:bg-purple-900 transition-colors">
+                    Continue
+                </button>
+            </div>
+        </div>
+    </form>
+{% endblock %}

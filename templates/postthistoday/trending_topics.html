@@ -1,0 +1,149 @@
+
+{% extends 'base.html' %}
+
+{% block content %}
+    <!-- Step Indicator -->
+    <div class="relative mb-8">
+        <div class="hidden sm:flex items-center justify-between">
+            <div class="relative flex items-center">
+                <div class="w-8 h-8 rounded-full flex items-center justify-center bg-purple-800 text-white">
+                    <i data-lucide="check" class="w-5 h-5"></i>
+                </div>
+                <span class="ml-2 text-sm text-gray-500">Writing Samples</span>
+                <div class="w-full h-0.5 mx-4 bg-purple-800"></div>
+            </div>
+            <div class="relative flex items-center">
+                <div class="w-8 h-8 rounded-full flex items-center justify-center bg-purple-800 text-white">
+                    <span>2</span>
+                </div>
+                <span class="ml-2 text-sm text-purple-800 font-medium">Trending Topics</span>
+                <div class="w-full h-0.5 mx-4 bg-stone-200"></div>
+            </div>
+            <div class="relative flex items-center">
+                <div class="w-8 h-8 rounded-full flex items-center justify-center bg-stone-200 text-gray-600">
+                    <span>3</span>
+                </div>
+                <span class="ml-2 text-sm text-gray-500">Content Prompt</span>
+                <div class="w-full h-0.5 mx-4 bg-stone-200"></div>
+            </div>
+            <div class="relative flex items-center">
+                <div class="w-8 h-8 rounded-full flex items-center justify-center bg-stone-200 text-gray-600">
+                    <span>4</span>
+                </div>
+                <span class="ml-2 text-sm text-gray-500">Customize</span>
+                <div class="w-full h-0.5 mx-4 bg-stone-200"></div>
+            </div>
+            <div class="relative flex items-center">
+                <div class="w-8 h-8 rounded-full flex items-center justify-center bg-stone-200 text-gray-600">
+                    <span>5</span>
+                </div>
+                <span class="ml-2 text-sm text-gray-500">Preview & Share</span>
+            </div>
+        </div>
+
+        <!-- Mobile Step Indicator -->
+        <div class="sm:hidden text-center">
+            <p class="text-sm font-medium text-purple-800">
+                Step {{ current_step }} of {{ total_steps }}
+            </p>
+            <p class="mt-1 text-lg font-medium text-gray-900">
+                {{ step_name }}
+            </p>
+        </div>
+    </div>
+
+    <!-- Trending Topics Section -->
+    <form method="post">
+        {% csrf_token %}
+        <div class="bg-white rounded-lg border border-stone-200 p-6">
+            <h3 class="text-lg font-semibold text-gray-900 mb-2">
+                Trending Topics
+            </h3>
+            <p class="text-gray-600 mb-6">
+                Select a trending topic to create content around
+            </p>
+
+            <div class="space-y-4">
+                {% for topic in trending_topics %}
+                    <label class="block cursor-pointer">
+                        <input type="radio" name="selected_topic" value="{{ topic.title }}"
+                               {% if selected_topic == topic.title %}checked{% endif %}
+                               class="hidden topic-radio">
+                        <div class="topic-item w-full text-left p-4 rounded-lg border transition-all border-stone-200 hover:border-purple-200 hover:bg-stone-50">
+                            <div class="flex items-start justify-between">
+                                <div class="flex-1">
+                                    <div class="flex items-center gap-2 mb-1">
+                                        <span class="text-xs font-medium px-2 py-0.5 rounded bg-stone-100 text-gray-600">
+                                            {{ topic.category }}
+                                        </span>
+                                        <span class="text-xs text-gray-500">{{ topic.time }}</span>
+                                    </div>
+                                    <h4 class="font-medium text-gray-900">{{ topic.title }}</h4>
+                                    <p class="text-sm text-gray-500 mt-1">{{ topic.source }}</p>
+                                </div>
+                                <div class="arrow-icon hidden">
+                                    <i data-lucide="arrow-right" class="h-5 w-5 text-purple-600 mt-1"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </label>
+                {% endfor %}
+            </div>
+
+            <div class="mt-8 flex gap-3">
+                <a href="{% url 'writing_samples' %}" class="flex-1 py-3 px-6 border border-stone-200 rounded-lg hover:bg-stone-50 text-gray-700 text-center">
+                    Back
+                </a>
+                <button type="submit" id="continue-btn" class="flex-1 bg-purple-800 text-white py-3 px-6 rounded-lg hover:bg-purple-900 disabled:opacity-50 disabled:cursor-not-allowed transition-colors">
+                    Continue
+                </button>
+            </div>
+        </div>
+    </form>
+{% endblock %}
+
+{% block extra_js %}
+    <script>
+        const topicRadios = document.querySelectorAll('.topic-radio');
+        const continueBtn = document.getElementById('continue-btn');
+
+        // Update visual state when radio buttons change
+        topicRadios.forEach(radio => {
+            radio.addEventListener('change', function() {
+                // Reset all items
+                document.querySelectorAll('.topic-item').forEach(item => {
+                    item.classList.remove('border-purple-300', 'bg-purple-50', 'ring-2', 'ring-purple-200');
+                    item.classList.add('border-stone-200');
+                });
+
+                document.querySelectorAll('.arrow-icon').forEach(arrow => {
+                    arrow.classList.add('hidden');
+                });
+
+                // Highlight selected item
+                if (this.checked) {
+                    const item = this.nextElementSibling;
+                    item.classList.remove('border-stone-200');
+                    item.classList.add('border-purple-300', 'bg-purple-50', 'ring-2', 'ring-purple-200');
+
+                    const arrow = item.querySelector('.arrow-icon');
+                    arrow.classList.remove('hidden');
+                }
+
+                // Enable/disable continue button
+                const hasSelection = Array.from(topicRadios).some(r => r.checked);
+                continueBtn.disabled = !hasSelection;
+            });
+        });
+
+        // Initialize state
+        document.addEventListener('DOMContentLoaded', function() {
+            const checkedRadio = document.querySelector('.topic-radio:checked');
+            if (checkedRadio) {
+                checkedRadio.dispatchEvent(new Event('change'));
+            } else {
+                continueBtn.disabled = true;
+            }
+        });
+    </script>
+{% endblock %}
